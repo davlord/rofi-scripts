@@ -14,9 +14,9 @@ if [[ $ROFI_RETV = 0 ]]
 then
     echo -en "\0prompt\x1fAudio output\n"
     pactl list sinks \
-     | grep -E "Sink|Description" \
+     | grep -E "Name|Description" \
      | awk '{printf "%s ", $0} NR % 2 == 0 {print ""}' \
-     | sed -r "s/Sink #([0-9])+[ \t]+Description: (.*)/\2\x00info\x1f\1/"
+     | sed -r "s/Name: ([^ ]+)[ \t]+Description: (.*)/\2\x00info\x1f\1/"
 fi
 
 # on selection
