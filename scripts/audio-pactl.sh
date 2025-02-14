@@ -12,6 +12,7 @@ LANG="en_US.utf8" # force english to avoid translated output
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
+    echo -en "\0prompt\x1fAudio output\n"
     pactl list sinks \
      | grep -E "Sink|Description" \
      | awk '{printf "%s ", $0} NR % 2 == 0 {print ""}' \
