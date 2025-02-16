@@ -13,7 +13,8 @@ LANG="en_US.utf8" # force english to avoid translated output
 if [[ $ROFI_RETV = 0 ]]
 then
     echo -en "\0prompt\x1fAudio output\n"
-    readonly default_sink=$(pactl get-default-sink)
+    default_sink=$(pactl get-default-sink)
+    readonly default_sink
     pactl list sinks \
      | grep -E "Name|Description" \
      | awk '{printf "%s ", $0} NR % 2 == 0 {print ""}' \
@@ -24,5 +25,5 @@ fi
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "${ROFI_INFO}" ]
 then
-    pactl set-default-sink $ROFI_INFO
+    pactl set-default-sink "$ROFI_INFO"
 fi
