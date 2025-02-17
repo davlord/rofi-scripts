@@ -1,5 +1,5 @@
 # rofi-scripts
-My own handcrafter rofi scripts.
+My own handcrafted rofi scripts.
 
 ## Installation
 Put scripts in `.config/rofi/scripts`.
