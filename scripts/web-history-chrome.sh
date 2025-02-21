@@ -1,55 +1,34 @@
 #!/bin/bash
 
 #
-# Select tmuxp project
-# Requires tmuxp to be installed (obviously)
+# Select and open from browser history
+# For chrome based browsers (chromium, brave, ...)
 #
 
 set -euo pipefail
 
-SQLITE_DB="$HOME/.config/chromium/Default/History"
+#SQLITE_DB="$HOME/.config/chromium/Default/History"
+SQLITE_DB="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
 SQLITE_DB_READ="/tmp/pwet"
 LIMIT=5000
+SEPARATOR="	"
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
-  sqlite3 -readonly -list "$SQLITE_DB_READ" \
-      "SELECT concat(title, char(0), 'info', char(31), id, char(10))
+  cp -f $SQLITE_DB $SQLITE_DB_READ
+  sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB_READ" \
+      "SELECT id, title
        FROM urls
        GROUP BY title
        ORDER BY last_visit_time DESC
-       LIMIT $LIMIT"
+       LIMIT $LIMIT" \
+  | awk -F "$SEPARATOR" '{printf "%s\x00info\x1f%s\n", $2, $1}'
 fi
 
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "$1" ]
 then
-    echo "$1 - $ROFI_INFO"
-    # sqlite3 "$tmp_history" "SELECT url FROM urls WHERE id='$ROFI_INFO'"
+    url=$(sqlite3 -readonly "$SQLITE_DB_READ" "SELECT url FROM urls WHERE id='$ROFI_INFO'")
+    coproc ( xdg-open "$url" )
 fi
-
-
-
-# get_url() {
-#   sqlite3 "$tmp_history" "SELECT url FROM urls WHERE id='$1'"
-# }
-
-# # If we have an input, extract the url and open it in the default browser
-# if [ ! -z ${1+x} ]; then
-#     id=$(echo "$1" | awk '{print $1}')
-#     url=$(get_url $id)
-#     $open "${url}" > /dev/null 2>&1
-#     exit 0
-# fi
-
-
-# extract_chrome_history() {
-#   local history_file=$1
-#   cp -f "$history_file" "$tmp_history"
-#   # shellcheck disable=2086
-# }
-
-# for chrome_history_file in "${chrome_history_files[@]}"; do
-#   extract_chrome_history "$chrome_history_file"
-# done
