@@ -3,21 +3,29 @@
 #
 # Select and open from browser history
 # For chrome based browsers (chromium, brave, ...)
+# Requires xdg-open
 #
 
 set -euo pipefail
 
-#SQLITE_DB="$HOME/.config/chromium/Default/History"
-SQLITE_DB="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
-SQLITE_DB_READ="/tmp/pwet"
+declare -A DATABASES 
+DATABASES=(
+  ["chromium"]="$HOME/.config/chromium/Default/History"
+  ["brave"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
+)
+BROWSER="brave"
+
+TMP=${TMPDIR-/tmp}
+SQLITE_DB="${TMP}/rofi-script-web-history-${BROWSER}"
 LIMIT=5000
 SEPARATOR="	"
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
-  cp -f $SQLITE_DB $SQLITE_DB_READ
-  sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB_READ" \
+  echo -en "\0prompt\x1fHistory from ${BROWSER}\n"
+  cp -f ${DATABASES[$BROWSER]} $SQLITE_DB
+  sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB" \
       "SELECT id, title
        FROM urls
        GROUP BY title
@@ -29,6 +37,6 @@ fi
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "$1" ]
 then
-    url=$(sqlite3 -readonly "$SQLITE_DB_READ" "SELECT url FROM urls WHERE id='$ROFI_INFO'")
-    coproc ( xdg-open "$url" )
+    url=$(sqlite3 -readonly "$SQLITE_DB" "SELECT url FROM urls WHERE id='$ROFI_INFO'")
+    xdg-open "$url" > /dev/null 2>&1 & # brave cannot be launched in coproc
 fi
