@@ -11,11 +11,26 @@ set -euo pipefail
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
-    nmcli --terse con | awk -F  ':' '{if ($3 == "vpn") { vpn_name=$1; vpn_id=$2; vpn_active = $4 == "" ? "false" : "true"; printf "%s\x00info\x1f%s\x1factive\x1f%s\n", vpn_name, vpn_id, vpn_active } }'
+    nmcli --terse con | awk -F  ':' '{if ($3 == "vpn") {
+    	  vpn_name=$1;
+	  vpn_id=$2;
+          vpn_active = $4 == "" ? "false" : "true";
+	  vpn_toggle = $4 == "" ? "up" : "down";
+          printf "%s\x00info\x1f%s %s\x1factive\x1f%s\n", vpn_name, vpn_toggle, vpn_id, vpn_active
+    } }'
 fi
 
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "$ROFI_INFO" ]
 then
-    coproc( nmcli connection up "$ROFI_INFO" )
+    CONNECTION_ACTION=$(echo $ROFI_INFO | cut -d ' ' -f 1) 
+    VPN_ID=$(echo $ROFI_INFO | cut -d ' ' -f 2) 
+    case "$CONNECTION_ACTION" in
+	up)
+	    coproc( nmcli connection up "$VPN_ID" )
+	    ;;
+	down)
+	    coproc( nmcli connection down "$VPN_ID" )
+	    ;;
+    esac
 fi
