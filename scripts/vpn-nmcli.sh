@@ -23,14 +23,5 @@ fi
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "$ROFI_INFO" ]
 then
-    CONNECTION_ACTION=$(echo $ROFI_INFO | cut -d ' ' -f 1) 
-    VPN_ID=$(echo $ROFI_INFO | cut -d ' ' -f 2) 
-    case "$CONNECTION_ACTION" in
-	up)
-	    coproc( nmcli connection up "$VPN_ID" )
-	    ;;
-	down)
-	    coproc( nmcli connection down "$VPN_ID" )
-	    ;;
-    esac
+   coproc( nmcli connection $ROFI_INFO )
 fi
