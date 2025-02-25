@@ -20,15 +20,13 @@ if [[ $ROFI_RETV = 0 ]]
 then
   echo -en "\0prompt\x1fBookmarks from ${BROWSER}\n"
   cat ${BOOKMARK_FILES[${BROWSER}]} | \
-    jq --raw-output 'def build_path($path):
-	if .children then
-	    .children[] | build_path($path + "/" + .name)
-	elif has("url") then
-	    $path + "/" + .name + "\u0000info\u001f" + .url
-	else
-	    empty
+    jq --raw-output 'def build_path($parent):
+	if .type == "folder" then
+	    .children[] | build_path($parent + "/" + .name)
+	elif .type == "url" then
+	    $parent + "/" + .name + "\u0000info\u001f" + .url
 	end;
-	.roots.bookmark_bar | .. | objects | select(has("children") or has("url")) | build_path("")' 
+	.roots.bookmark_bar | .. | objects | select(has("type")) | build_path("")' 
 fi
 
 # on selection
