@@ -26,7 +26,7 @@ then
 	elif .type == "url" then
 	    $parent + "/" + .name + "\u0000info\u001f" + .url
 	end;
-	.roots.bookmark_bar | .. | objects | select(has("type")) | build_path("")' 
+	.roots.bookmark_bar | build_path("")' 
 fi
 
 # on selection
