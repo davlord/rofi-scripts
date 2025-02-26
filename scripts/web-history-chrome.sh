@@ -11,9 +11,9 @@ set -euo pipefail
 declare -A DATABASES 
 DATABASES=(
   ["chromium"]="$HOME/.config/chromium/Default/History"
-  ["brave"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
+  ["brave-browser"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
 )
-BROWSER="brave"
+BROWSER=$(xdg-settings get default-web-browser | cut -f1 -d ".")
 
 TMP=${TMPDIR-/tmp}
 SQLITE_DB="${TMP}/rofi-script-web-history-${BROWSER}"
