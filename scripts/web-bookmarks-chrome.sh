@@ -13,7 +13,7 @@ BOOKMARK_FILES=(
   ["chromium"]="$HOME/.config/chromium/Default/Bookmarks"
   ["brave"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
-BROWSER="brave"
+BROWSER=$(xdg-settings get default-web-browser | cut -f1 -d ".")
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
