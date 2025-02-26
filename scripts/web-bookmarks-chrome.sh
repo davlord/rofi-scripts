@@ -19,14 +19,14 @@ BROWSER=$(xdg-settings get default-web-browser | cut -f1 -d ".")
 if [[ $ROFI_RETV = 0 ]]
 then
   echo -en "\0prompt\x1fBookmarks from ${BROWSER}\n"
-  cat ${BOOKMARK_FILES[${BROWSER}]} | \
-    jq --raw-output 'def build_path($parent):
+  jq --raw-output 'def build_path($parent):
 	if .type == "folder" then
 	    .children[] | build_path($parent + "/" + .name)
 	elif .type == "url" then
 	    $parent + "/" + .name + "\u0000info\u001f" + .url
 	end;
-	.roots | keys[] as $i | .[$i] | build_path("")' 
+	.roots | keys[] as $i | .[$i] | build_path("")' \
+     "${BOOKMARK_FILES[${BROWSER}]}"
 fi
 
 # on selection
