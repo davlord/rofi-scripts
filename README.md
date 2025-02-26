@@ -22,6 +22,9 @@ Open a tmuxp project.
 ### vpn-nmcli.sh
 Connect/disconnect from network manager VPN using nmcli.
 
+### web-bookmarks-chrome.sh
+Select a bookmark from chrome based browser and open it. 
+
 ### web-history-chrome.sh
 Open an URL from chrome based browser history. 
 
