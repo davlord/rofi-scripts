@@ -11,7 +11,7 @@ set -euo pipefail
 declare -A BOOKMARK_FILES 
 BOOKMARK_FILES=(
   ["chromium"]="$HOME/.config/chromium/Default/Bookmarks"
-  ["brave"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/Bookmarks"
+  ["brave-browser"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
 BROWSER=$(xdg-settings get default-web-browser | cut -f1 -d ".")
 
