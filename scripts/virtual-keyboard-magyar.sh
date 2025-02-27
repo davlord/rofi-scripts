@@ -2,7 +2,7 @@
 
 #
 # Select special chars that will be pasted
-# Requires nmcli to be installed
+# Requires: wl-copy, wtype
 #
 
 set -euo pipefail
