@@ -7,27 +7,41 @@
 
 set -euo pipefail
 
-LANG="en_US.utf8" # force english to avoid translated output
+VBoxManage() {
+    case $2 in
+        "vms")
+	    echo '"win 10" {0000-abcd}'
+	    echo '"pwet" {1234-xxxx}'
+	    ;;
+	"runningvms")
+	    echo '"pwet" {1234-xxxx}'
+	    ;;
+    esac
+}
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
     echo -en "\0prompt\x1fVirtualBox VMs\n"
+
     active_vm_ids=( $(VBoxManage list runningvms | sed -r 's/"([^"]+)"\ \{(.*)\}/\2/') )
 
-    declare -A pwet
-    while IFS=":" read -r priority host ; do
-	pwet["$priority"]="$host"
+    declare -A vms
+    while IFS=":" read -r id name ; do
+	vms["$id"]="$name"
     done < <(VBoxManage list vms | sed -r 's/"([^"]+)"\ \{(.*)\}/\2:\1/')
 
-    for priority in "${!pwet[@]}" ; do
-	echo "$priority -> ${pwet[$priority]}"
+    for id in "${!vms[@]}" ; do
+	active="false"
+	info="startvm $id"
+	for i in "${active_vm_ids[@]}"; do
+	    if [ "$i" == "$id" ] ; then
+	    active="true"
+	    info="controlvm $id shutdown"
+	    fi
+	done
+	echo -en "${vms[$id]}\x00info\x1f${info}\x1factive\x1f${active}\n"
     done
-
-    # printf '%s\n' "${active_vm_ids[@]}"
- #    VBoxManage list vms \
-	# | sed -r 's/"([^"]+)"\ \{(.*)\}/\2:\1/' \
-	# | awk -F ':' -v active_vm_ids="${active_vm_ids[*]}" 'BEGIN {split(active_vm_ids,arr," "); vm_active = ($1 in arr) ? "true" : "false"; printf "%s-%s\x00info\x1f%s\x1factive\x1f%s\n", $2, vm_active, $1, "false" }'
 fi
 
 # on selection
