@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #
-# Select pulseaudio output
-# Requires pactl to be installed
+# Start/stop virtualbox VMs
+# Requires: VBoxManage
 #
 
 set -euo pipefail
