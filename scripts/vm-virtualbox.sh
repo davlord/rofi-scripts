@@ -22,13 +22,15 @@ then
     for id in "${!vms[@]}" ; do
 	active="false"
 	info="startvm $id"
+	name_suffix=""
 	for i in "${active_vm_ids[@]}"; do
 	    if [ "$i" == "$id" ] ; then
 	    active="true"
 	    info="controlvm $id shutdown"
+	    name_suffix=" [running]"
 	    fi
 	done
-	echo -en "${vms[$id]}\x00info\x1f${info}\x1factive\x1f${active}\n"
+	echo -en "${vms[$id]}${name_suffix}\x00info\x1f${info}\x1factive\x1f${active}\n"
     done
 fi
 
