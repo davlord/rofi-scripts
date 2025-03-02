@@ -7,18 +7,6 @@
 
 set -euo pipefail
 
-VBoxManage() {
-    case $2 in
-        "vms")
-	    echo '"win 10" {0000-abcd}'
-	    echo '"pwet" {1234-xxxx}'
-	    ;;
-	"runningvms")
-	    echo '"pwet" {1234-xxxx}'
-	    ;;
-    esac
-}
-
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
@@ -47,5 +35,5 @@ fi
 # on selection
 if [[ $ROFI_RETV = 1 ]] && [ -n "${ROFI_INFO}" ]
 then
-    echo "$ROFI_INFO"
+    coproc ( VBoxManage $ROFI_INFO )
 fi
