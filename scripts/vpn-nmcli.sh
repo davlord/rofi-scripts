@@ -12,7 +12,7 @@ set -euo pipefail
 if [[ $ROFI_RETV = 0 ]]
 then
     nmcli --terse con | awk -F  ':' '{if ($3 == "vpn") {
-    	  vpn_name=$1;
+    	  vpn_name = $4 == "" ? $1 : $1 " [connected]";
 	  vpn_id=$2;
           vpn_active = $4 == "" ? "false" : "true";
 	  vpn_toggle = $4 == "" ? "up" : "down";
