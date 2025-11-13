@@ -25,6 +25,7 @@ if [[ $ROFI_RETV = 0 ]]
 then
   echo -en "\0prompt\x1fHistory from ${BROWSER}\n"
   cp -f "${DATABASES[$BROWSER]}" "$SQLITE_DB"
+  cp -f "${DATABASES[$BROWSER]}-journal" "$SQLITE_DB-journal"
   sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB" \
       "SELECT id, title
        FROM urls
