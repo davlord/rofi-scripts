@@ -10,6 +10,7 @@ set -euo pipefail
 
 declare -A BOOKMARK_FILES 
 BOOKMARK_FILES=(
+  ["vivaldi-stable"]="$HOME/.config/vivaldi/Default/Bookmarks"
   ["chromium"]="$HOME/.config/chromium/Default/Bookmarks"
   ["brave-browser"]="$HOME/.config/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
