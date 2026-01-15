@@ -11,7 +11,7 @@ set -euo pipefail
 # generate list
 if [[ $ROFI_RETV = 0 ]]
 then
-    tmuxp ls
+    tmuxp ls --json | jq -r '.workspaces[].session_name'
 fi
 
 # on selection
