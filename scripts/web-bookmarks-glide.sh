@@ -21,7 +21,7 @@ readonly BROWSER_DIR="${HOME}/.config/glide/glide/w2z9me1p.default-glide"
 TMP=${TMPDIR-/tmp}
 SQLITE_DB="${TMP}/rofi-script-web-history-glide"
 LIMIT=5000
-SEPARATOR="	"
+SEPARATOR="|"
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
@@ -31,7 +31,7 @@ then
   sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB" \
       "SELECT fk, title
        FROM moz_bookmarks
-       WHERE parent > 2
+       WHERE fk is not null
        ORDER BY title ASC
        LIMIT $LIMIT" \
   | awk -F "$SEPARATOR" '{printf "%s\x00info\x1f%s\n", $2, $1}'

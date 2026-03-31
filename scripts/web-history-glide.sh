@@ -21,7 +21,7 @@ readonly BROWSER_DIR="${HOME}/.config/glide/glide/w2z9me1p.default-glide"
 TMP=${TMPDIR-/tmp}
 SQLITE_DB="${TMP}/rofi-script-web-history-glide"
 LIMIT=5000
-SEPARATOR="	"
+SEPARATOR="|"
 
 # generate list
 if [[ $ROFI_RETV = 0 ]]
@@ -29,7 +29,7 @@ then
   echo -en "\0prompt\x1fHistory from glide\n"
   cp -f "${BROWSER_DIR}/places.sqlite" "$SQLITE_DB"
   sqlite3 -separator "$SEPARATOR" -readonly -list "$SQLITE_DB" \
-       "SELECT p.url, p.title 
+       "SELECT distinct p.url, p.title 
        FROM moz_historyvisits hv 
        INNER JOIN moz_places p 
        ON hv.place_id=p.id 
